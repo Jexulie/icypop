@@ -1,0 +1,5 @@
+{
+    "code-runner.executorMap": {
+        "go": "go run \"c:\\Users\\Dude\\Desktop\\Icypop\\lib.go\" "
+    }
+}

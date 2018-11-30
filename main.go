@@ -4,7 +4,6 @@ package main
 // turn into a api maybe
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -49,8 +48,18 @@ func searchLink(s string) []string {
 }
 
 func main() {
-	first := Icypop{URI: "http://tureng.com/en/turkish-english"}
-	first.getBody()
-	list := first.search("a.a")
-	fmt.Println(list)
+	// first := Icypop{URI: "http://tureng.com/en/turkish-english"}
+	// first.getBody()
+	// list := first.search("a.a")
+	// fmt.Println(list)
+
+	// t1 := ".yellow"
+	// t2 := "#red div a"
+	t3 := "div.yellow"
+	// t4 := "h3#header a.blue"
+
+	// SearchParser(t1)
+	// SearchParser(t2)
+	SearchParser(t3)
+	// SearchParser(t4)
 }
