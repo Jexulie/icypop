@@ -31,7 +31,6 @@ func SearchParser(search string) string {
 
 	for _, e := range separated {
 		if checkSpecial(e) {
-			// memory problem
 			special, restSpecial := getSpecial(e)
 			if checkIdentifier(restSpecial) {
 				identifier, restIdentifier := getIdentifier(restSpecial)
@@ -79,7 +78,7 @@ func includes(arr [96]string, s string) bool {
 
 // regex flags "(?i)" case insensetive
 func checkSpecial(text string) bool {
-	pat := "^(.*)[\\.\\#]?(.*)"
+	pat := "^(.*)[\\.\\#](.*)"
 	comp, _ := regexp.Compile(pat)
 	r := comp.FindStringSubmatch(text)
 	inc := includes(domElements, r[1])
