@@ -55,11 +55,14 @@ func main() {
 
 	// t1 := ".yellow"
 	// t2 := "#red div a"
-	t3 := "div.yellow"
-	// t4 := "h3#header a.blue"
 
-	// SearchParser(t1)
-	// SearchParser(t2)
+	t1 := "h1.green a p.big"
+	t2 := "div.header h2#jumbotron a.lastlink"
+	t3 := "div.yellow i#blue"
+	t4 := "h3#header a.blue"
+
+	SearchParser(t1)
+	SearchParser(t2)
 	SearchParser(t3)
-	// SearchParser(t4)
+	SearchParser(t4)
 }

@@ -17,53 +17,54 @@ var symbols = map[string]string{
 
 /* steps
 1. spit to array by spaces
-2. check special word if there is check if has # or . or none | on false search only by class or id
+2. check object word if there is check if has # or . or none | on false search only by class or id
 3. search in text if its found, go to next array item
 4. rinse & repeat
 */
 
 // SearchParser does something amazing
-func SearchParser(search string) string {
+func SearchParser(search string) {
 
 	// split to array
 	separated := strings.Split(search, " ")
-	// steps := len(separated)
+
+	steps := len(separated)
 
 	for _, e := range separated {
-		if checkSpecial(e) {
-			special, restSpecial := getSpecial(e)
-			if checkIdentifier(restSpecial) {
-				identifier, restIdentifier := getIdentifier(restSpecial)
-				fmt.Println(special)
-				fmt.Println(restSpecial)
-				fmt.Println(identifier)
-				fmt.Println(restIdentifier)
+		m := recuvCheck(e)
+		fmt.Println(m)
+	}
+}
+
+// seperation logic - recursive usage
+func recuvCheck(text string) map[string]string {
+	element := make(map[string]string)
+	if checkAlone(text) {
+		// div | a | p goes to parse
+		element["object"] = text
+		return element
+	} else {
+		if checkObject(text) {
+			object, restObject := getObject(text)
+			element["object"] = object
+
+			if checkIdentifier(restObject) {
+				identifier, restIdentifier := getIdentifier(restObject)
+				element["identifier"] = symbols[identifier]
+				element["name"] = restIdentifier
+				return element
 			} else {
-				fmt.Println(e)
+				element["name"] = restObject
+				return element
 			}
-		} else if checkIdentifier(e) {
-			identifier, restIdentifier := getIdentifier(e)
-			fmt.Println(identifier)
-			fmt.Println(restIdentifier)
 		} else {
-			fmt.Println(e)
+			identifier, restIdentifier := getIdentifier(text)
+			element["identifier"] = symbols[identifier]
+			element["name"] = restIdentifier
+
+			return element
 		}
 	}
-
-	// checkIdentifierPattern := fmt.Sprintf("^[\\#\\.](.*)")
-
-	// startPattern := "^[\\.\\#](.*)"
-	// if regexp.MatchString(startPattern, search) {
-
-	// } else {
-
-	// }
-	// patternClass := "\\.?(.*)"
-	// patternID := "\\#?(.*)"
-	// check := regexp.MatchString(pattern, search)
-	// seperation, _ := regexp.Compile(pattern)
-	// f := r.FindStringSubmatch(s)
-	return ""
 }
 
 // dirty fix | [96]string
@@ -76,8 +77,15 @@ func includes(arr [96]string, s string) bool {
 	return false
 }
 
+// separates w/o class|id
+func checkAlone(text string) bool {
+	pat := "^(.*)([\\#\\.].*)"
+	result, _ := regexp.MatchString(pat, text)
+	return !result
+}
+
 // regex flags "(?i)" case insensetive
-func checkSpecial(text string) bool {
+func checkObject(text string) bool {
 	pat := "^(.*)[\\.\\#](.*)"
 	comp, _ := regexp.Compile(pat)
 	r := comp.FindStringSubmatch(text)
@@ -85,20 +93,17 @@ func checkSpecial(text string) bool {
 	return inc
 }
 
-func getSpecial(text string) (special string, rest string) {
-	identifier := checkIdentifier(text)
-	if identifier {
-		return text, ""
-	} else {
-		pat := "^(.*)([\\#\\.].*)?"
-		comp, _ := regexp.Compile(pat)
-		r := comp.FindStringSubmatch(text)
-		return r[1], r[2]
-	}
+// gets dom object and rest of the string
+func getObject(text string) (object string, rest string) {
+	pat := "^(.*)([\\#\\.].*)"
+	comp, _ := regexp.Compile(pat)
+	r := comp.FindStringSubmatch(text)
+	return r[1], r[2]
 }
 
+// checks class|id
 func checkIdentifier(text string) bool {
-	p := "^([\\#\\.])(.*)"
+	p := "^(.*)([\\#\\.])(.*)"
 	result, _ := regexp.MatchString(p, text)
 	if result {
 		return true
@@ -106,6 +111,7 @@ func checkIdentifier(text string) bool {
 	return false
 }
 
+// gets class|id and rest of the string
 func getIdentifier(text string) (identifier string, rest string) {
 	pat := "^([\\#\\.])(.*)"
 	comp, _ := regexp.Compile(pat)
