@@ -10,6 +10,15 @@ var domElements = [...]string{
 	"a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdo", "blockquote", "body", "br", "button", "canvas", "caption", "site", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "footer", "form", "head", "header", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html", "i", "iframe", "img", "ins", "input", "kbd", "label", "legend", "li", "link", "map", "mark", "menu", "menuitem", "meta", "meter", "nav", "object", "ol", "optgroup", "p", "param", "pre", "progress", "q", "s", "samp", "script", "section", "select", "small", "source", "span", "strong", "style", "sub", "summary", "sup", "table", "td", "th", "tr", "tetarea", "time", "title", "track", "u", "ul", "var", "video",
 }
 
+// not done yet
+var elemsNoBrackets = [...]string{
+	"input", "img", "br", "hr",
+}
+
+var attributes = [...]string{
+	"href", "src",
+}
+
 var symbols = map[string]string{
 	".": "class",
 	"#": "id",
@@ -23,17 +32,23 @@ var symbols = map[string]string{
 */
 
 // SearchParser does something amazing
-func SearchParser(search string) {
+func SearchParser(search string, text string) {
 
 	// split to array
 	separated := strings.Split(search, " ")
 
-	steps := len(separated)
+	// text changes every loop
+	// result in the end
+	t := text
 
 	for _, e := range separated {
 		m := recuvCheck(e)
-		fmt.Println(m)
+		rest := domFinder(t, m)
+		t = rest
+		// fmt.Println(s[2])
 	}
+
+	fmt.Println(t)
 }
 
 // seperation logic - recursive usage
@@ -67,8 +82,8 @@ func recuvCheck(text string) map[string]string {
 	}
 }
 
-// dirty fix | [96]string
-func includes(arr [96]string, s string) bool {
+// dirty fix | [96]string -- testing array[:]
+func includes(arr []string, s string) bool {
 	for _, i := range arr {
 		if i == s {
 			return true
@@ -89,7 +104,7 @@ func checkObject(text string) bool {
 	pat := "^(.*)[\\.\\#](.*)"
 	comp, _ := regexp.Compile(pat)
 	r := comp.FindStringSubmatch(text)
-	inc := includes(domElements, r[1])
+	inc := includes(domElements[:], r[1])
 	return inc
 }
 
@@ -119,9 +134,31 @@ func getIdentifier(text string) (identifier string, rest string) {
 	return r[1], r[2]
 }
 
-// func domFinder(text string, searched string) string {
+// array str for now
+func domFinder(text string, searched map[string]string) string {
+	// testing <%s>(.*)</%s>
+	// 2 <%s(.*)/?>
 
-// }
+	// get whole tag instead of text in it
+	var htmlBrackets string
+	if includes(elemsNoBrackets[:], searched["object"]) {
+		htmlBrackets = fmt.Sprintf("<%s(.*)/?>", searched["object"])
+	} else {
+		htmlBrackets = fmt.Sprintf(">(.*)</%s", searched["object"])
+	}
+
+	comp, _ := regexp.Compile(htmlBrackets)
+	r := comp.FindStringSubmatch(text)
+	if len(r) > 1 {
+		return r[1]
+	}
+	return r[0]
+	// 1. object finder
+	// 2. identifier finder ?!
+	// 3. name finder then get text in it
+	// 4. or get attribute text
+
+}
 
 // func searchAttribute(text string, attri string) string {
 

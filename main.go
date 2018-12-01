@@ -53,16 +53,18 @@ func main() {
 	// list := first.search("a.a")
 	// fmt.Println(list)
 
-	// t1 := ".yellow"
-	// t2 := "#red div a"
-
-	t1 := "h1.green a p.big"
+	// t1 := "h1.green a p.big"
 	t2 := "div.header h2#jumbotron a.lastlink"
-	t3 := "div.yellow i#blue"
+	t3 := "br#seperator"
 	t4 := "h3#header a.blue"
 
-	SearchParser(t1)
-	SearchParser(t2)
-	SearchParser(t3)
-	SearchParser(t4)
+	// h1 := "<h1 class=\"green\"><a href=\"www.google.com\"><p class=\"big\">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla, ratione!</p></a></h1>"
+	h2 := "<div class=\"header\"><h2 id=\"jumbotron\"><a href=\"#\" class=\"lastlink\">site is empty</a></h2></div>"
+	h3 := "<br id=\"seperator\">"
+	h4 := "<h3 id=\"header\"><a href=\"#\" class=\"blue\">omg its empty</a></h3>"
+
+	// SearchParser(t1, h1)
+	SearchParser(t2, h2)
+	SearchParser(t3, h3)
+	SearchParser(t4, h4)
 }
